@@ -45,10 +45,16 @@ class Player(pygame.sprite.Sprite):
                 self.direction -= 360
             print(self.direction)
         rect_cols = self.rect.collidelistall(rects)
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w]:            # W key
+            # step through speed one px at a time
             for px in range(self.speed):
+                # stop = True if the player encounters a wall
                 stop = False
+
+                # each step, check all collisions
                 for i in rect_cols:
+                    # boolean for collided rect is above the player, player
+                    # center is between left and right
                     above = all(
                         [
                             rects[i].bottom >= self.rect.top,
@@ -58,11 +64,15 @@ class Player(pygame.sprite.Sprite):
                         ]
                     )
                     if above:
+                        # if coliided block is above, stop the player
                         stop = True
-                        self.rect.centery += 1
                         break
-                self.rect.centery -= 1
-        if keys[pygame.K_s]:
+                # if the player is not stopped, decrement centery
+                if not stop:
+                    self.rect.centery -= 1
+
+        if keys[pygame.K_s]:            # S key
+            # repeats pattern from above. See W key comments
             for px in range(self.speed):
                 stop = False
                 for i in rect_cols:
@@ -79,7 +89,8 @@ class Player(pygame.sprite.Sprite):
                         break
                 if not stop:
                     self.rect.centery += 1
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a]:            # A key
+            # repeats pattern from above. See W key comments
             for px in range(self.speed):
                 stop = False
                 for i in rect_cols:
@@ -96,7 +107,8 @@ class Player(pygame.sprite.Sprite):
                         break
                 if not stop:
                     self.rect.centerx -= 1
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d]:            # D key
+            # repeats pattern from above. See W key comments
             for px in range(self.speed):
                 stop = False
                 for i in rect_cols:
@@ -114,11 +126,11 @@ class Player(pygame.sprite.Sprite):
                 if not stop:
                     self.rect.centerx += 1
 
-    def laser(self, screen, rects):
+    def laser(self, screen, rects, map):
         bounce_points = calculate_line(
             self.rect.center,
             self.direction,
-            rects,
+            map,
             self.bounces)
         origin = self.rect.center
         for point in bounce_points:

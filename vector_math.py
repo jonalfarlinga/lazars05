@@ -1,5 +1,6 @@
 import math
-# from constants import *  # noqa:F403 flake8 ignore
+from maps import collide_point
+from constants import *  # noqa:F403 flake8 ignore
 
 
 # converts a heading to a unit vector
@@ -59,8 +60,29 @@ def reflect_direction(uvx, uvy, last, rect, terms_of_x):
     return uvx, uvy
 
 
-def calculate_line(source, deg, rects, bounces):
+# takes x/y vector components, the previous key value, and a rect
+# returns a reflected vector
+def reflect(uvx, uvy, collision):
+    if collision == "horizontal":
+        uvy = -uvy
+    else:
+        uvx = -uvx
+    return uvx, uvy
+
+
+# draw a ray from the player to the first block
+def calculate_line(source, deg, map, bounces):
+    bounce_points = []
     uvx, uvy = deg_to_vector(deg)
 
-    return [(source[0] + uvx * 80,
-            source[1] + uvy * 80)]
+    while source and len(bounce_points) < bounces:
+        for depth in range(SCREEN_WIDTH):
+            point = (source[0] + uvx * depth,
+                     source[1] + uvy * depth)
+            collision = collide_point(point, map)
+            if collision:
+                bounce_points.append(point)
+                uvx, uvy = reflect(uvx, uvy, collision)
+                break
+        source = point
+    return bounce_points
