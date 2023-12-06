@@ -20,8 +20,9 @@ pygame.display.set_caption("Lazars ver 0.5")
 font = pygame.font.SysFont("Arial", 20)
 
 
-def print_background(screen, walls):
+def print_background():
     screen.fill(BLACK)
+    game_map.blit_walls(screen)
 
 
 '''
@@ -29,6 +30,8 @@ initialize game environment
 '''
 # create a surface on screen and initialize entities
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+game_map = maps.Map(maps.level_1)
+game_map.blit_walls(screen)
 
 player = Player()
 player.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
@@ -42,9 +45,11 @@ def main():
 
     # main loop
     while True:
-        rects = print_background(screen)
-
-        debug_me.debug(pygame.mouse.get_pos(), screen, rects)
+        print_background()
+        player.action()
+        screen.blit(player.image, player.rect)
+        player.laser(screen, game_map)
+        debug_me.debug(pygame.mouse.get_pos(), screen)
 
         # event handling, gets all event from the event queue
         for event in pygame.event.get():
