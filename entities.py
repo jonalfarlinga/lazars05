@@ -1,6 +1,6 @@
 import pygame
 from os import path
-from vector_math import raycast_DDA
+from vector_math import raycast_DDA, deg_to_vector
 from constants import *  # noqa:F403 flake8 ignore
 
 
@@ -43,11 +43,13 @@ class Player():
 
     def action(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_LEFT]:
             self.direction -= 2.5
+            print(self.direction, deg_to_vector(self.direction))
             if self.direction < 0:
                 self.direction += 360
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_RIGHT]:
+            print(self.direction, deg_to_vector(self.direction))
             self.direction += 2.5
             if self.direction > 359:
                 self.direction -= 360
