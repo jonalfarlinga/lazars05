@@ -5,11 +5,10 @@ from constants import *  # noqa:F403 flake8 ignore
 
 
 class Player():
-    rect = pygame.Rect(0, 0, 1, 1)
     image_src = path.join("assets", "player.png")
     image = pygame.image.load(image_src)
     rect = image.get_rect()
-    direction = 0  # facing in radians
+    direction = 355  # facing in radians
     speed = 5  # number of times to move per frame
     bounces = 3  # number of times to bounce the laser
 

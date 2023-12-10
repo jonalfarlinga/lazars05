@@ -1,5 +1,4 @@
 import pygame
-import os
 from constants import *  # noqa:F403 flake8 ignore
 # import debug_me
 '''
@@ -9,10 +8,7 @@ Linting is ignored in this file for "Line is too long"
 
 
 def test():
-    global MAP_HEIGHT
-    MAP_HEIGHT = 18
-    global MAP_WIDTH
-    MAP_WIDTH = 25
+    # 25x18 map
     return (
         '#########################'
         '#                       #'
@@ -36,10 +32,7 @@ def test():
 
 
 def level_1():
-    global MAP_HEIGHT
-    MAP_HEIGHT = 18
-    global MAP_WIDTH
-    MAP_WIDTH = 25
+    # 25x18 map
     return (
         '#########################'
         '#                       #'

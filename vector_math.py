@@ -40,7 +40,7 @@ def raycast_DDA(source, deg, game_map):
         vRayLength1Dx = (floor(vMapCheck[0] + 1) - source[0]) * vx_stepsize
     if uvy < 0:
         vStepy = -1
-        vRayLength1Dy = (source[1] - floor(vMapCheck[0])) * vy_stepsize
+        vRayLength1Dy = (source[1] - floor(vMapCheck[1])) * vy_stepsize
     else:
         vStepy = 1
         vRayLength1Dy = (floor(vMapCheck[1] + 1) - source[1]) * vy_stepsize
@@ -49,7 +49,6 @@ def raycast_DDA(source, deg, game_map):
     bTileFound = False
     fMaxDistance = SCREEN_WIDTH
     fDistance = 0
-
     while not bTileFound and fDistance < fMaxDistance:
         # walk along shortest path
         if vRayLength1Dx < vRayLength1Dy:
@@ -62,9 +61,12 @@ def raycast_DDA(source, deg, game_map):
             vRayLength1Dy += vy_stepsize
 
         # test tile at new test point
-        if (vMapCheck[0] >= 0 and vMapCheck[0] < MAP_WIDTH and
-           vMapCheck[1] >= 0 and vMapCheck[1] < MAP_HEIGHT):
-            if game_map.map[vMapCheck[1] * MAP_WIDTH + vMapCheck[0]] == '#':
+        map_x = vMapCheck[0] // WALL_SIZE
+        map_y = vMapCheck[1] // WALL_SIZE
+        if (map_x >= 0 and map_x < MAP_WIDTH and
+           map_y >= 0 and map_y < MAP_HEIGHT):
+            map_tile = map_y * MAP_WIDTH + map_x
+            if game_map.map[map_tile] == '#':
                 bTileFound = True
 
     if bTileFound:

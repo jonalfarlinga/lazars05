@@ -8,8 +8,8 @@ Linting is ignored in this app for "Could not detect from * imports
 # initialize assets
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 720
-MAP_WIDTH = 0
-MAP_HEIGHT = 0
+MAP_WIDTH = 25
+MAP_HEIGHT = 18
 BORDER_WIDTH = 12
 TOP_PAD = 24
 
