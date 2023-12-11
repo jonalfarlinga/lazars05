@@ -50,6 +50,7 @@ def raycast_DDA(source, deg, game_map):
     fMaxDistance = SCREEN_WIDTH
     fDistance = 0
     while not bTileFound and fDistance < fMaxDistance:
+        block1 = (vMapCheck[0] // WALL_SIZE, vMapCheck[1] // WALL_SIZE)
         # walk along shortest path
         if vRayLength1Dx < vRayLength1Dy:
             vMapCheck = (vMapCheck[0] + vStepx, vMapCheck[1])
@@ -61,41 +62,43 @@ def raycast_DDA(source, deg, game_map):
             vRayLength1Dy += vy_stepsize
 
         # test tile at new test point
-        map_x = vMapCheck[0] // WALL_SIZE
-        map_y = vMapCheck[1] // WALL_SIZE
-        if (map_x >= 0 and map_x < MAP_WIDTH and
-           map_y >= 0 and map_y < MAP_HEIGHT):
-            map_tile = map_y * MAP_WIDTH + map_x
-            if game_map.map[map_tile] == '#':
-                bTileFound = True
+        bTileFound = game_map.map_check(vMapCheck)
 
     if bTileFound:
+        block2 = (vMapCheck[0] // WALL_SIZE, vMapCheck[1] // WALL_SIZE)
+        if 45 <= deg < 135:
+            if block1[0] > block2[0]:
+                normal = 180
+            else:
+                normal = 360
+        elif 225 <= deg < 315:
+            if block1[0] < block2[0]:
+                normal = 180
+            else:
+                normal = 360
+        elif 135 <= deg < 225:
+            if block1[1] < block2[1]:  # BROKEN
+                normal = 180
+            else:
+                normal = 360
+        else:
+            if block1[1] > block2[1]:
+                normal = 360
+            else:
+                normal = 180
+        deg = normal - deg
+        if deg < 0:
+            deg += 360
+        elif deg > 360:
+            deg -= 360
+
         return (
-            source[0] + uvx * fDistance,
-            source[1] + uvy * fDistance,
+            (source[0] + uvx * fDistance,
+             source[1] + uvy * fDistance),
+            deg
         )
     else:
-        if 45 <= deg < 135:
-            return (
-                linear_eq_inv(
-                    source,
-                    SCREEN_HEIGHT,
-                    (uvx, uvy)
-                ),
-                SCREEN_HEIGHT
-            )
-        elif 135 <= deg < 225:
-            return (
-                0, linear_eq(source, 0, (uvx, uvy))
-            )
-        elif 225 <= deg < 315:
-            return (
-                linear_eq_inv(source, 0, (uvx, uvy)), 0
-            )
-        else:
-            return (
-                SCREEN_WIDTH, linear_eq(source, SCREEN_WIDTH, (uvx, uvy))
-            )
+        return (0, 0), deg
 
 
 # takes a point and vector and an x2, returns y2

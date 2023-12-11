@@ -34,7 +34,7 @@ game_map = maps.Map(maps.level_1)
 game_map.blit_walls(screen)
 
 player = Player()
-player.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+player.rect.center = (SCREEN_WIDTH // 2, 280)
 
 FramesPerSecond = pygame.time.Clock()
 

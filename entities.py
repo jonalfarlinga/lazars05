@@ -13,11 +13,19 @@ class Player():
     bounces = 3  # number of times to bounce the laser
 
     def find_bounce(self, game_map):
-        return [raycast_DDA(
-            self.rect.center,
-            self.direction,
-            game_map,
-        )]
+        bounce_points = []
+        vector = self.direction
+        source = self.rect.center
+
+        while len(bounce_points) < self.bounces:
+            source, vector = raycast_DDA(
+                source,
+                vector,
+                game_map,
+            )
+            bounce_points.append(source)
+
+        return bounce_points
 
     # find laser bounces and blit lines
     def laser(self, screen, map):
