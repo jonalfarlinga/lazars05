@@ -50,7 +50,7 @@ def raycast_DDA(source, deg, game_map):
     fMaxDistance = SCREEN_WIDTH
     fDistance = 0
     while not bTileFound and fDistance < fMaxDistance:
-        block1 = (vMapCheck[0] // WALL_SIZE, vMapCheck[1] // WALL_SIZE)
+        last_block = vMapCheck
         # walk along shortest path
         if vRayLength1Dx < vRayLength1Dy:
             vMapCheck = (vMapCheck[0] + vStepx, vMapCheck[1])
@@ -65,8 +65,16 @@ def raycast_DDA(source, deg, game_map):
         bTileFound = game_map.map_check(vMapCheck)
 
     if bTileFound:
+        #x_diff = bTileFound[0] - bTileFound[0] // WALL_SIZE
+        #y_diff = bTileFound[1] - bTileFound[1] // WALL_SIZE
+        block1 = (last_block[0] // WALL_SIZE, last_block[1] // WALL_SIZE)
         block2 = (vMapCheck[0] // WALL_SIZE, vMapCheck[1] // WALL_SIZE)
         if 45 <= deg < 135:
+            # block1 = (last_block[0] + 1 // WALL_SIZE,
+            #          last_block[1] // WALL_SIZE)
+            # block2 = (last_block[0] - 1 // WALL_SIZE,
+            #          last_block[1] // WALL_SIZE)
+            # if game_map.map_check(block1) or game_map.map_check(block2):
             if block1[0] > block2[0]:
                 normal = 180
             else:
@@ -78,9 +86,9 @@ def raycast_DDA(source, deg, game_map):
                 normal = 360
         elif 135 <= deg < 225:
             if block1[1] < block2[1]:  # BROKEN
-                normal = 180
-            else:
                 normal = 360
+            else:
+                normal = 180
         else:
             if block1[1] > block2[1]:
                 normal = 360
