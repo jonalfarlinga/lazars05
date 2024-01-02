@@ -2,6 +2,7 @@ import pygame
 from os import path
 from vector_math import raycast_DDA, deg_to_vector
 from constants import *  # noqa:F403 flake8 ignore
+DEBUG = False
 
 
 class Player():
@@ -13,6 +14,7 @@ class Player():
     bounces = 3  # number of times to bounce the laser
 
     def find_bounce(self, game_map):
+        global DEBUG
         bounce_points = []
         vector = self.direction
         source = self.rect.center
@@ -23,6 +25,9 @@ class Player():
                 vector,
                 game_map,
             )
+            if DEBUG:
+                DEBUG = False
+                print(source)
             bounce_points.append(source)
 
         return bounce_points
@@ -49,13 +54,16 @@ class Player():
             origin = point
 
     def action(self):
+        global DEBUG
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
+            DEBUG = True
             self.direction -= 2.5
             print(self.direction, deg_to_vector(self.direction))
             if self.direction < 0:
                 self.direction += 360
         if keys[pygame.K_RIGHT]:
+            DEBUG = True
             print(self.direction, deg_to_vector(self.direction))
             self.direction += 2.5
             if self.direction > 359:

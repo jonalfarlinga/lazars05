@@ -1,5 +1,6 @@
 import pygame
 from constants import *  # noqa:F403 flake8 ignore
+from math import floor
 # import debug_me
 '''
 map builders
@@ -76,8 +77,8 @@ class Map:
                     # debug_me.print_square(screen, row, col, font)
 
     def map_check(self, mapcheck):
-        map_x = mapcheck[0] // WALL_SIZE
-        map_y = mapcheck[1] // WALL_SIZE
+        map_x = floor(mapcheck[0])
+        map_y = floor(mapcheck[1])
         if (map_x >= 0 and map_x < MAP_WIDTH and
            map_y >= 0 and map_y < MAP_HEIGHT):
             map_tile = map_y * MAP_WIDTH + map_x

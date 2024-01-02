@@ -19,6 +19,7 @@ def distance(point1, point2):
 
 def raycast_DDA(source, deg, game_map):
     uvx, uvy = deg_to_vector(deg)
+    source = source[0] / WALL_SIZE, source[1] / WALL_SIZE
 
     # meaure Step Size
     try:
@@ -34,23 +35,22 @@ def raycast_DDA(source, deg, game_map):
     vMapCheck = source
     if uvx < 0:
         vStepx = -1
-        vRayLength1Dx = (source[0] - floor(vMapCheck[0])) * vx_stepsize
+        vRayLength1Dx = (source[0] - vMapCheck[0]) * vx_stepsize
     else:
         vStepx = 1
-        vRayLength1Dx = (floor(vMapCheck[0] + 1) - source[0]) * vx_stepsize
+        vRayLength1Dx = (vMapCheck[0] + 1 - source[0]) * vx_stepsize
     if uvy < 0:
         vStepy = -1
-        vRayLength1Dy = (source[1] - floor(vMapCheck[1])) * vy_stepsize
+        vRayLength1Dy = (source[1] - vMapCheck[1]) * vy_stepsize
     else:
         vStepy = 1
-        vRayLength1Dy = (floor(vMapCheck[1] + 1) - source[1]) * vy_stepsize
+        vRayLength1Dy = (vMapCheck[1] + 1 - source[1]) * vy_stepsize
 
     # perform walk until collision or range check
     bTileFound = False
-    fMaxDistance = SCREEN_WIDTH
+    fMaxDistance = SCREEN_WIDTH / WALL_SIZE
     fDistance = 0
     while not bTileFound and fDistance < fMaxDistance:
-        last_block = vMapCheck
         # walk along shortest path
         if vRayLength1Dx < vRayLength1Dy:
             vMapCheck = (vMapCheck[0] + vStepx, vMapCheck[1])
@@ -64,41 +64,50 @@ def raycast_DDA(source, deg, game_map):
         # test tile at new test point
         bTileFound = game_map.map_check(vMapCheck)
 
+    return (floor(vMapCheck[0] * WALL_SIZE), floor(vMapCheck[1]) * WALL_SIZE), deg
+
+
+"""
     if bTileFound:
-        #x_diff = bTileFound[0] - bTileFound[0] // WALL_SIZE
-        #y_diff = bTileFound[1] - bTileFound[1] // WALL_SIZE
-        block1 = (last_block[0] // WALL_SIZE, last_block[1] // WALL_SIZE)
-        block2 = (vMapCheck[0] // WALL_SIZE, vMapCheck[1] // WALL_SIZE)
-        if 45 <= deg < 135:
-            # block1 = (last_block[0] + 1 // WALL_SIZE,
-            #          last_block[1] // WALL_SIZE)
-            # block2 = (last_block[0] - 1 // WALL_SIZE,
-            #          last_block[1] // WALL_SIZE)
+
+        test1 = (vMapCheck[0], vMapCheck[1])
+        test2 = (vMapCheck[0], vMapCheck[1])
+        # if 45 <= deg < 135:
+            # block1 = (last_block[0] + 1,
+            #          last_block[1])
+            # block2 = (last_block[0] - 1,
+            #          last_block[1])
             # if game_map.map_check(block1) or game_map.map_check(block2):
-            if block1[0] > block2[0]:
-                normal = 180
+        if game_map.map_check(test1) or game_map.map_check(test2):
+            incident = 0 - deg
+        else:
+            incident = 90 - deg
+        '''
+                normal = 90
             else:
                 normal = 360
         elif 225 <= deg < 315:
             if block1[0] < block2[0]:
-                normal = 180
-            else:
                 normal = 360
+            else:
+                normal = 90
         elif 135 <= deg < 225:
             if block1[1] < block2[1]:  # BROKEN
                 normal = 360
             else:
-                normal = 180
+                normal = 90
         else:
             if block1[1] > block2[1]:
                 normal = 360
             else:
-                normal = 180
-        deg = normal - deg
-        if deg < 0:
-            deg += 360
-        elif deg > 360:
-            deg -= 360
+                normal = 90
+
+        '''
+        deg = deg - 2 * incident
+        # if deg < 0:
+        #    deg += 360
+        # elif deg > 360:
+        #    deg -= 360
 
         return (
             (source[0] + uvx * fDistance,
@@ -107,6 +116,7 @@ def raycast_DDA(source, deg, game_map):
         )
     else:
         return (0, 0), deg
+"""
 
 
 # takes a point and vector and an x2, returns y2
